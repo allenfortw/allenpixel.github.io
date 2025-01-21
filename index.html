@@ -1,0 +1,320 @@
+<!DOCTYPE html><html lang="zh-TW"><head><meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob: https://cdnjs.cloudflare.com https://cdn.jsdelivr.net https://code.jquery.com https://unpkg.com https://d3js.org https://threejs.org https://cdn.plot.ly https://stackpath.bootstrapcdn.com https://maps.googleapis.com https://cdn.tailwindcss.com https://ajax.googleapis.com https://kit.fontawesome.com https://cdn.datatables.net https://maxcdn.bootstrapcdn.com https://code.highcharts.com https://tako-static-assets-production.s3.amazonaws.com https://www.youtube.com https://fonts.googleapis.com https://fonts.gstatic.com https://pfst.cf2.poecdn.net https://puc.poecdn.net https://i.imgur.com https://wikimedia.org https://*.icons8.com https://*.giphy.com https://picsum.photos https://images.unsplash.com; frame-src 'self' https://www.youtube.com https://trytako.com; child-src 'self'; manifest-src 'self'; worker-src 'self'; upgrade-insecure-requests; block-all-mixed-content;">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Allenpixel - Minecraft伺服器</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: '微軟正黑體', sans-serif;
+        }
+
+        body {
+            background: #f8f9fa;
+            min-height: 100vh;
+            overflow-x: hidden;
+            color: #374151;
+        }
+
+        .particle {
+            position: fixed;
+            pointer-events: none;
+            width: 8px;
+            height: 8px;
+            background: #4ade80;
+            border-radius: 2px;
+            filter: blur(1px);
+            z-index: -1;
+        }
+
+        .hero-section {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            padding: 40px 20px;
+            text-align: center;
+            background: linear-gradient(rgba(255,255,255,0.9), rgba(255,255,255,0.9));
+        }
+
+        .title {
+            font-size: 5em;
+            background: linear-gradient(45deg, #059669, #34d399);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 15px;
+            opacity: 0;
+            transform: translateY(-20px);
+            animation: fadeInDown 0.8s forwards;
+        }
+
+        .subtitle {
+            color: #6b7280;
+            font-size: 1.2em;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.8s forwards 0.3s;
+            margin-bottom: 40px;
+        }
+
+        .server-ip {
+            background: white;
+            padding: 15px 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            opacity: 0;
+            animation: fadeIn 0.8s forwards 0.6s;
+        }
+
+        .ip-text {
+            font-size: 1.2em;
+            color: #059669;
+        }
+
+        .copy-button {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .copy-button:hover {
+            background: #059669;
+            transform: translateY(-2px);
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: bounce 2s infinite;
+            color: #10b981;
+            font-size: 1.5em;
+        }
+
+        .content-section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2em;
+            margin-bottom: 40px;
+            color: #059669;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease;
+            opacity: 0;
+            animation: fadeIn 0.8s forwards;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-emoji {
+            font-size: 2em;
+            margin-bottom: 15px;
+        }
+
+        .feature-title {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+            color: #059669;
+        }
+
+        .feature-description {
+            color: #6b7280;
+            line-height: 1.6;
+        }
+
+        .info-section {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            margin-top: 60px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .info-item {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .info-icon {
+            font-size: 2em;
+            color: #059669;
+            margin-bottom: 15px;
+        }
+
+        @keyframes fadeInDown {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0) translateX(-50%);
+            }
+            40% {
+                transform: translateY(-30px) translateX(-50%);
+            }
+            60% {
+                transform: translateY(-15px) translateX(-50%);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .title {
+                font-size: 3em;
+            }
+            .server-ip {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .section-title {
+                font-size: 1.5em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <section class="hero-section">
+        <h1 class="title">Allenpixel</h1>
+        <p class="subtitle">讓我們一起創造獨特的Minecraft世界！</p>
+        <div class="server-ip">
+            <span class="ip-text">mc.allenpixel.com</span>
+            <button class="copy-button" onclick="copyIP()">複製 IP</button>
+        </div>
+        <div class="scroll-indicator">↓</div>
+    </section>
+
+    <section class="content-section">
+        <h2 class="section-title">伺服器特色</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-emoji">🎮</div>
+                <h3 class="feature-title">穩定流暢</h3>
+                <p class="feature-description">伺服器採用高效能硬體配置，確保遊戲體驗流暢無比，讓您專注於遊戲樂趣。</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-emoji">🌟</div>
+                <h3 class="feature-title">插件優化</h3>
+                <p class="feature-description">精心挑選的插件組合，為您帶來更豐富的遊戲內容，同時保持原版特色。</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-emoji">🤝</div>
+                <h3 class="feature-title">友善社群</h3>
+                <p class="feature-description">溫馨和諧的玩家社群，讓您在遊戲中結交新朋友，共同創造美好回憶。</p>
+            </div>
+        </div>
+
+        <div class="info-section">
+            <div class="info-grid">
+                <div class="info-item">
+                    <div class="info-icon">📌</div>
+                    <h3>遊戲版本</h3>
+                    <p>Minecraft 1.20.1</p>
+                </div>
+                <div class="info-item">
+                    <div class="info-icon">🎯</div>
+                    <h3>伺服器類型</h3>
+                    <p>插件生存</p>
+                </div>
+                <div class="info-item">
+                    <div class="info-icon">🛡️</div>
+                    <h3>安全保障</h3>
+                    <p>24/7 管理員在線</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        function copyIP() {
+            navigator.clipboard.writeText('mc.allenpixel.com');
+            const button = document.querySelector('.copy-button');
+            button.textContent = '已複製！';
+            setTimeout(() => {
+                button.textContent = '複製 IP';
+            }, 2000);
+        }
+
+        function createParticle() {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            
+            const startX = Math.random() * window.innerWidth;
+            const startY = window.innerHeight + 10;
+            
+            particle.style.left = startX + 'px';
+            particle.style.top = startY + 'px';
+            
+            document.body.appendChild(particle);
+            
+            const animation = particle.animate([
+                { transform: `translate(0, 0) rotate(0deg)`, opacity: 0.8 },
+                { transform: `translate(${Math.random() * 100 - 50}px, -${window.innerHeight + 20}px) rotate(${Math.random() * 360}deg)`, opacity: 0 }
+            ], {
+                duration: 5000,
+                easing: 'linear'
+            });
+            
+            animation.onfinish = () => particle.remove();
+        }
+
+        setInterval(createParticle, 300);
+
+        // 增加滾動動畫
+        document.querySelectorAll('.feature-card').forEach((card, index) => {
+            card.style.animationDelay = `${0.2 * index}s`;
+        });
+    </script>
+
+
+</body></html>
